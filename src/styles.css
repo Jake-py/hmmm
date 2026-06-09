@@ -717,9 +717,63 @@ button:disabled {
 }
 
 @media (max-width: 820px) {
+  body {
+    background: linear-gradient(180deg, #020303 0%, #06090b 52%, #020303 100%);
+  }
+
+  .panel::before {
+    animation: none;
+    display: none;
+  }
+
+  .hero, .test-card, .stat-card, .quiz-shell {
+    animation: mobileFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+  }
+
+  .test-card:nth-child(1) { animation-delay: 0.05s; }
+  .test-card:nth-child(2) { animation-delay: 0.1s; }
+  .test-card:nth-child(3) { animation-delay: 0.15s; }
+  .test-card:nth-child(4) { animation-delay: 0.2s; }
+  .test-card:nth-child(n+5) { animation-delay: 0.25s; }
+
+  @keyframes mobileFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(15px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   .page,
   .quiz-shell {
     width: min(100% - 20px, 1180px);
+  }
+
+  /* Smartphone specific accessibility */
+  @media (max-width: 480px) {
+    .hero h1 {
+      font-size: 2.4rem;
+    }
+    .page {
+      padding: 20px 0 40px;
+    }
+    .answer-button {
+      padding: 14px;
+      font-size: 0.95rem;
+    }
+    .hero-actions {
+      flex-direction: column;
+      align-items: stretch;
+      width: 100%;
+    }
+    .hero-actions button {
+      width: 100%;
+      justify-content: center;
+    }
   }
 
   .hero,
@@ -737,14 +791,15 @@ button:disabled {
     position: sticky;
     top: 132px;
     z-index: 10;
-    grid-template-columns: repeat(auto-fill, minmax(32px, 1fr));
-    max-height: 112px;
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    max-height: 120px;
     order: -1;
+    gap: 8px;
   }
 
   .question-nav button {
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
     justify-self: center;
   }
 

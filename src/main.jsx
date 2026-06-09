@@ -19,8 +19,8 @@ import {
 import testData from "./data/tests.generated.json";
 import "./styles.css";
 
-const HISTORY_KEY = "cant-see-light.history";
-const SETTINGS_KEY = "cant-see-light.settings";
+const HISTORY_KEY = "red-ice.history";
+const SETTINGS_KEY = "red-ice.settings";
 const DEFAULT_ACCENT = "#27d8ff";
 
 function readStorage(key, fallback) {
@@ -564,7 +564,7 @@ function HomeView({ tests, stats, onStart, onHistory, onSettings }) {
       <header className="hero">
         <div>
           <p className="muted">Test runner</p>
-          <h1>Can't see light...</h1>
+          <h1>RED ICE</h1>
         </div>
         <div className="hero-actions">
           <button className="ghost-button" onClick={onHistory}>
