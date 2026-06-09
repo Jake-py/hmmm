@@ -781,6 +781,8 @@ button:disabled {
   .quiz-header {
     align-items: stretch;
     flex-direction: column;
+    position: static;
+    backdrop-filter: none;
   }
 
   .quiz-layout {
@@ -788,13 +790,12 @@ button:disabled {
   }
 
   .question-nav {
-    position: sticky;
-    top: 132px;
-    z-index: 10;
+    position: static;
     grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
-    max-height: 120px;
+    max-height: none;
     order: -1;
     gap: 8px;
+    margin-bottom: 20px;
   }
 
   .question-nav button {
@@ -808,7 +809,11 @@ button:disabled {
   }
 
   .finish-button {
-    right: 14px;
-    bottom: 14px;
+    position: static;
+    width: 100%;
+    margin-top: 24px;
+    border-radius: 8px;
+    right: auto;
+    bottom: auto;
   }
 }
