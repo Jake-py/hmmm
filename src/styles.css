@@ -273,9 +273,16 @@ button:disabled {
   color: var(--danger);
 }
 
+.mode-selection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 6px 0 16px;
+}
+
 .mode-button {
   width: 100%;
-  margin: 6px 0 16px;
+  margin: 0;
   color: var(--muted);
 }
 
@@ -485,6 +492,10 @@ button:disabled {
 
 .answer-button.revealed {
   cursor: default;
+}
+
+.answer-button.wallhack {
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
 }
 
 .answer-button.correct {

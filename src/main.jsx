@@ -142,6 +142,7 @@ function StartModal({ test, onClose, onBegin }) {
   const [questionCount, setQuestionCount] = React.useState("");
   const [shuffle, setShuffle] = React.useState(true);
   const [quizMode, setQuizMode] = React.useState(false);
+  const [wallHack, setWallHack] = React.useState(false);
 
   if (!test) return null;
 
@@ -157,6 +158,7 @@ function StartModal({ test, onClose, onBegin }) {
       questionCount: normalizedCount,
       shuffle,
       quizMode,
+      wallHack,
     });
   }
 
@@ -205,14 +207,25 @@ function StartModal({ test, onClose, onBegin }) {
           </span>
         </label>
 
-        <button
-          type="button"
-          className={`mode-button ${quizMode ? "active" : ""}`}
-          onClick={() => setQuizMode((value) => !value)}
-        >
-          <CheckCircle2 size={17} />
-          Режим Quiz
-        </button>
+        <div className="mode-selection">
+          <button
+            type="button"
+            className={`mode-button ${quizMode ? "active" : ""}`}
+            onClick={() => setQuizMode((value) => !value)}
+          >
+            <CheckCircle2 size={17} />
+            Режим Quiz
+          </button>
+
+          <button
+            type="button"
+            className={`mode-button ${wallHack ? "active" : ""}`}
+            onClick={() => setWallHack((value) => !value)}
+          >
+            <CheckCircle2 size={17} />
+            Режим WallHack
+          </button>
+        </div>
 
         <div className="modal-actions">
           <button type="button" className="ghost-button" onClick={onClose}>Отмена</button>
@@ -371,6 +384,7 @@ function QuizView({ session, onFinish, onExit }) {
             </span>
           ) : null}
           {session.quizMode ? <span>Quiz</span> : null}
+          {session.wallHack ? <span>WallHack</span> : null}
         </div>
       </header>
 
@@ -407,6 +421,7 @@ function QuizView({ session, onFinish, onExit }) {
                       revealed && answer.correct ? "correct" : "",
                       revealed && selectedAnswerId === answer.id && !answer.correct ? "wrong" : "",
                       revealed ? "revealed" : "",
+                      session.wallHack && answer.correct ? "wallhack" : "",
                     ].filter(Boolean).join(" ")}
                     onClick={() => chooseAnswer(question.id, answer.id)}
                   >
@@ -636,6 +651,7 @@ function App() {
       startedAt: Date.now(),
       timeLimitSeconds: config.minutes ? config.minutes * 60 : null,
       quizMode: config.quizMode,
+      wallHack: config.wallHack,
     });
     setView("quiz");
   }
