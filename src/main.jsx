@@ -2,6 +2,7 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import {
   BarChart3,
+  Bomb,
   Check,
   CheckCircle2,
   ChevronLeft,
@@ -613,6 +614,138 @@ function HomeView({ tests, stats, onStart, onHistory, onSettings }) {
   );
 }
 
+function SuccessAnimation({ onComplete }) {
+  const [stage, setStage] = React.useState("terminal"); // terminal, shrinking, bomb, explosion, modal
+  const [text, setText] = React.useState("");
+  const [countdown, setCountdown] = React.useState(3);
+  const [showFlash, setShowFlash] = React.useState(false);
+  
+  const codeLines = [
+    "[INFO] Initializing Core Exploit...",
+    "[INFO] Target: 192.168.1.105",
+    "[OK] Accessing kernel memory...",
+    "def exploit():",
+    "  payload = b'A' * 512",
+    "  return inject(payload)",
+    "[SUCCESS] Remote Shell Active.",
+    "[CRITICAL] OVERHEAT DETECTED!",
+    "[WARNING] SELF-DESTRUCT INITIATED!"
+  ];
+
+  React.useEffect(() => {
+    if (stage === "terminal") {
+      let lineIdx = 0;
+      const interval = setInterval(() => {
+        if (lineIdx < codeLines.length) {
+          setText(prev => prev + codeLines[lineIdx] + "\n");
+          lineIdx++;
+        } else {
+          clearInterval(interval);
+          setTimeout(() => setStage("shrinking"), 1000);
+        }
+      }, 150);
+      return () => clearInterval(interval);
+    }
+
+    if (stage === "shrinking") {
+      const timer = setTimeout(() => setStage("bomb"), 600);
+      return () => clearTimeout(timer);
+    }
+
+    if (stage === "bomb") {
+      if (countdown > 0) {
+        const timer = setTimeout(() => setCountdown(countdown - 1), 800);
+        return () => clearTimeout(timer);
+      } else {
+        setShowFlash(true);
+        setStage("explosion");
+      }
+    }
+
+    if (stage === "explosion") {
+      const timer = setTimeout(() => setStage("modal"), 1200);
+      return () => clearTimeout(timer);
+    }
+  }, [stage, countdown]);
+
+  const shards = React.useMemo(() => {
+    const chars = "@#$%&*01XYZ";
+    return Array.from({ length: 60 }).map((_, i) => ({
+      id: i,
+      char: chars[i % chars.length],
+      tx: (Math.random() - 0.5) * 200, // vw
+      ty: (Math.random() - 0.5) * 200, // vh
+      tr: Math.random() * 720,
+      s: Math.random() * 1.5 + 0.5,
+      delay: Math.random() * 0.2
+    }));
+  }, []);
+
+  return (
+    <div className="success-overlay" style={{ background: stage === 'modal' ? 'rgba(0,0,0,0.85)' : 'rgba(0,0,0,0.7)' }}>
+      {showFlash && <div className="flash-overlay" />}
+
+      {stage === "terminal" || stage === "shrinking" ? (
+        <div className={`terminal-wrapper ${stage === 'shrinking' ? 'shrinking' : ''}`}>
+          <div className="terminal-window" style={{ position: 'relative', top: 0, width: '100%' }}>
+            <div className="terminal-header">
+              <div className="dots"><span/><span/><span/></div>
+              <span>exploit.py</span>
+            </div>
+            <div className="terminal-content" style={{ height: '240px' }}>
+              <pre className="code-text" style={{ color: '#00ff41' }}>{text}</pre>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {stage === "bomb" && (
+        <div className="bomb-wrapper">
+          <div className="detonation-text" style={{ color: '#ff5370', fontSize: '3rem' }}>
+            {countdown}
+          </div>
+          <Bomb size={120} color="#ff5370" className="bomb-icon" />
+        </div>
+      )}
+
+      {stage === "explosion" && (
+        <div className="shards-container">
+          {shards.map(s => (
+            <div 
+              key={s.id}
+              className="shard-v2"
+              style={{
+                '--tx': `${s.tx}vw`,
+                '--ty': `${s.ty}vh`,
+                '--tr': `${s.tr}deg`,
+                fontSize: `${s.s}rem`,
+                animationDelay: `${s.delay}s`,
+                color: Math.random() > 0.5 ? '#ff5370' : '#27d8ff'
+              }}
+            >
+              {s.char}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {stage === "modal" && (
+        <div className="final-modal-wrap">
+          <div className="panel final-modal" style={{ border: '2px solid var(--accent)' }}>
+            <h2 style={{ fontSize: '2.2rem' }}>Поздравлямба!</h2>
+            <p style={{ fontSize: '1.1rem', marginBottom: '24px' }}>
+              Хоть не сложно было, но все равно постарался
+            </p>
+            <button className="primary-button" onClick={onComplete} style={{ width: '100%' }}>
+              Круто!
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function App() {
   const tests = testData.tests;
   const [history, setHistory] = React.useState(() => readStorage(HISTORY_KEY, []));
@@ -622,6 +755,7 @@ function App() {
   const [view, setView] = React.useState("home");
   const [session, setSession] = React.useState(null);
   const [result, setResult] = React.useState(null);
+  const [showSuccess, setShowSuccess] = React.useState(false);
   const lastConfig = React.useRef(null);
 
   React.useEffect(() => {
@@ -660,6 +794,9 @@ function App() {
     setHistory((current) => [entry, ...current]);
     setResult(entry);
     setSession(null);
+    if (entry.percent >= 90) {
+      setShowSuccess(true);
+    }
     setView("result");
   }
 
@@ -720,6 +857,10 @@ function App() {
           setAccent={(accent) => setSettings((current) => ({ ...current, accent }))}
           onClose={() => setSettingsOpen(false)}
         />
+      ) : null}
+
+      {showSuccess ? (
+        <SuccessAnimation onComplete={() => setShowSuccess(false)} />
       ) : null}
     </>
   );

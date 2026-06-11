@@ -1,0 +1,120 @@
+import os
+import sys
+import time
+import random
+
+# Эффект плавной печати текста
+def typewriter_effect(text, delay=0.03):
+    for char in text:
+        sys.stdout.write(char)
+        sys.stdout.flush()
+        time.sleep(delay)
+
+# Очистка экрана терминала
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+def main():
+    clear_screen()
+    
+    # --- СЦЕНА 1: Анимация ввода кода ---
+    fake_code = """
+[INFO] Initializing Core Exploit Sequence...
+[INFO] Loading payloads/payload.bin -> Memory Address: 0x7FFF5BE0
+[SUCCESS] Vulnerability found at offset 0x4A9B
+
+def trigger_payload():
+    target_ip = "192.168.1.105"
+    port = 4444
+    buffer = b"A" * 512 + b"\\xef\\xbe\\xad\\xde"
+    print(f"[*] Injecting shellcode into {target_ip}:{port}...")
+    return True
+
+if trigger_payload():
+    print("[SUCCESS] Remote Shell Active.")
+    print("[WARNING] Overheating core... System critical!")
+"""
+    print("\033[92m") # Включаем зеленый "хакерский" цвет текста
+    typewriter_effect(fake_code, delay=0.015)
+    time.sleep(1.5)
+    
+    # --- СЦЕНА 2: "Запуск" написанного кода ---
+    clear_screen()
+    typewriter_effect("[*] Compiling and executing generated exploit...\n", delay=0.04)
+    time.sleep(0.5)
+    
+    # Быстрый фейковый лог выполнения
+    for i in range(1, 6):
+        print(f"[+] Executing sub-routine {i}/5... OK")
+        time.sleep(0.3)
+    
+    print("\n\033[91m[CRITICAL] RUNTIME ERROR: Payload corrupted.")
+    print("[CRITICAL] Emergency self-destruction sequence initiated!\033[0m")
+    time.sleep(2.0)
+    
+    # --- СЦЕНА 3: Превращение в бомбу и обратный отсчет ---
+    bomb_ascii = [
+        "       . . . . .       ",
+        "      .         .      ",
+        "      .   (X)   .      ",
+        "       .       .       ",
+        "        `-----'        "
+    ]
+    
+    # Счётчик сжимается/превращается в бомбу в центре
+    for countdown in range(3, 0, -1):
+        clear_screen()
+        print("\n" * 5)
+        print(f"{' ' * 15}\033[93m  --- DETONATION IN {countdown} --- \033[0m\n")
+        # Рисуем бомбу
+        for line in bomb_ascii:
+            print(f"{' ' * 22}{line}")
+        time.sleep(1.0)
+        
+    # --- СЦЕНА 4: Взрыв символами и цифрами ---
+    clear_screen()
+    # Символы для осколков взрыва
+    shards = ['@', '#', '$', '%', '&', '*', '0', '1', 'X', 'Y', 'Z', '9', '8', '?', '!']
+    
+    # Получаем примерный размер терминала (или ставим дефолт)
+    rows, cols = 24, 80
+    center_row, center_col = rows // 2, cols // 2
+    
+    # Анимация расширения взрыва из центра
+    for radius in range(1, 20):
+        clear_screen()
+        # Генерируем сетку экрана на каждом кадре
+        screen = [[" " for _ in range(cols)] for _ in range(rows)]
+        
+        for r in range(rows):
+            for c in range(cols):
+                # Считаем расстояние от центра (эллиптическое искажение для терминала)
+                distance = ((c - center_col) ** 2 / 2 + (r - center_row) ** 2 * 2) ** 0.5
+                
+                # Заполняем символами на границе радиуса взрыва
+                if radius - 1.5 < distance < radius + 0.5:
+                    if 0 <= r < rows and 0 <= c < cols:
+                        screen[r][c] = random.choice(shards)
+        
+        # Выводим кадр взрыва яркими цветами (красный/желтый чередуются)
+        color = "\033[91m" if radius % 2 == 0 else "\033[93m"
+        sys.stdout.write(color)
+        for row in screen:
+            sys.stdout.write("".join(row) + "\n")
+        sys.stdout.write("\033[0m")
+        sys.stdout.flush()
+        
+        time.sleep(0.05) # Скорость расширения взрыва
+        
+    # Финал: Очистка и эпилог
+    time.sleep(0.5)
+    clear_screen()
+    print("\n" * 10)
+    print(f"{' ' * 28}\033[90m[ Connection Lost ]\033[0m\n")
+    print("\n" * 10)
+
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\n\033[0mProcess interrupted.")
