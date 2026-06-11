@@ -732,9 +732,9 @@ function SuccessAnimation({ onComplete }) {
       {stage === "modal" && (
         <div className="final-modal-wrap">
           <div className="panel final-modal" style={{ border: '2px solid var(--accent)' }}>
-            <h2 style={{ fontSize: '2.2rem' }}>Поздравлямба!</h2>
+            <h2 style={{ fontSize: '2.2rem' }}>ok...</h2>
             <p style={{ fontSize: '1.1rem', marginBottom: '24px' }}>
-              Хоть не сложно было, но все равно постарался
+              Hmmmmmm............
             </p>
             <button className="primary-button" onClick={onComplete} style={{ width: '100%' }}>
               Круто!
